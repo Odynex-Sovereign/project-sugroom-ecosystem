@@ -11,3 +11,6 @@ add_executable(sugroom_core_engine src/sugroom_core_engine.cpp)
 
 # Optimize execution parameters specifically targeting Orin Core compute profiles
 target_compile_options(sugroom_core_engine PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -arch=sm_87>)
+git add .
+git commit -m "feat: integrate Project Nystagmus edge stabilization DeepStream pipeline"
+git push origin main
