@@ -13,51 +13,72 @@ include_directories(
     /opt/nvidia/deepstream/deepstream/sources/includes
 )
 
-# Hardware compute microcode targeted to unlock Nvidia Orin Tensor Cores
+# Hardware compute microcode targeted to unlock NVIDIA Orin Tensor Cores
 set(JETSON_COMPUTE_ARCH -arch=sm_87)
 
 # =========================================================================
-# UNIFIED ECOSYSTEM OBJECT BUILD PIPELINES (13 CORE PRODUCTION TARGETS)
+# UNIFIED ECOSYSTEM EXECUTABLE TARGETS (16 CORE PRODUCTION MODULES)
 # =========================================================================
 
-# A. ORIGINAL SUGROOM BASELINE CORE MODULES
+# 1. Core SuGROOM Inverse-Tremor Engine (Feline CH Compensation)
 add_executable(sugroom_core_engine src/sugroom_core_engine.cpp)
 target_compile_options(sugroom_core_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 2. Project Nystagmus Engine (Visual Jitter DeepStream Stabilization)
 add_executable(project_nystagmus_engine src/project_nystagmus_engine.cpp)
 target_link_libraries(project_nystagmus_engine PRIVATE ${GSTREAMER_LIBRARIES} cuda)
 
+# 3. Project Myotonia Engine (Adaptive Rigidity Lockdown)
 add_executable(project_myotonia_engine src/project_myotonia_engine.cpp)
 target_compile_options(project_myotonia_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 4. Project Hypermetria Engine (Predictive Target Over-Shoot Damping)
 add_executable(project_hypermetria_engine src/project_hypermetria_engine.cpp)
 target_compile_options(project_hypermetria_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 5. Project Synesthesia Engine (Cross-Modal Fallback Navigation)
 add_executable(project_synesthesia_engine src/project_synesthesia_engine.cpp)
 target_compile_options(project_synesthesia_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
-# B. CLINICAL PATHOLOGY & INFECTIOUS DISEASE SIMULATION ARCHITECTURES
+# 6. Project Parkinson Engine (Signal Dropout Resilience Layer)
 add_executable(project_parkinson_engine src/project_parkinson_engine.cpp)
 target_compile_options(project_parkinson_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 7. Project Hemophilia Engine (Vascular Coagulation Leak Isolation)
 add_executable(project_hemophilia_engine src/project_hemophilia_engine.cpp)
 target_compile_options(project_hemophilia_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 8. Project Tetanus Engine (Inhibitory Motor Current Dampening)
 add_executable(project_tetanus_engine src/project_tetanus_engine.cpp)
 target_compile_options(project_tetanus_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 9. Project Phantom-Limb Engine (Kinematic Loss Trajectory Rebalancer)
 add_executable(project_phantom_limb_engine src/project_phantom_limb_engine.cpp)
 target_compile_options(project_phantom_limb_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
-# C. HIGH-VALUE ZOOLOGY ADAPTATION & DERMATOLOGICAL DEFENSE SYSTEMS
+# 10. Project Equine-Laminitis Engine (Quadruped Weight Redistribution)
 add_executable(project_laminitis_engine src/project_laminitis_engine.cpp)
 target_compile_options(project_laminitis_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 11. Project Gecko-Ecdysis Engine (Dynamic Clamping Friction Control)
 add_executable(project_ecdysis_engine src/project_ecdysis_engine.cpp)
 target_compile_options(project_ecdysis_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 12. Project Coagulation-Scab Engine (Self-Healing Resin Boundaries)
 add_executable(project_scab_engine src/project_scab_engine.cpp)
 target_compile_options(project_scab_engine PRIVATE ${JETSON_COMPUTE_ARCH})
 
+# 13. Project Melanogenesis Engine (Active Radiation Shielding Loop)
 add_executable(project_melanogenesis_engine src/project_melanogenesis_engine.cpp)
 target_compile_options(project_melanogenesis_engine PRIVATE ${JETSON_COMPUTE_ARCH})
+
+# 14. Project Callous-Malunion Engine (Warped Geometry Angular Calibration)
+add_executable(project_malunion_engine src/project_malunion_engine.cpp)
+target_compile_options(project_malunion_engine PRIVATE ${JETSON_COMPUTE_ARCH})
+
+# 15. Embedded Export Control Compliance Sentinel Module
+add_executable(compliance_sentinel src/compliance_sentinel.cpp)
+
+# 16. Project Homeostasis Engine (Decentralized Traffic Self-Regulation)
+add_executable(project_homeostasis_engine src/project_homeostasis_engine.cpp)
+target_compile_options(project_homeostasis_engine PRIVATE ${JETSON_COMPUTE_ARCH})
