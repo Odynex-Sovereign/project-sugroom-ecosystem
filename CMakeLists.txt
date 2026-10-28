@@ -14,3 +14,9 @@ target_compile_options(sugroom_core_engine PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -
 git add .
 git commit -m "feat: integrate Project Nystagmus edge stabilization DeepStream pipeline"
 git push origin main
+# Add compilation targets for Project Myotonia's structural shock engine
+add_executable(project_myotonia_engine src/project_myotonia_engine.cpp)
+
+# Align GPU compiler profiles with optimized Jetson Orin streaming capabilities
+target_compile_options(project_myotonia_engine PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -arch=sm_87>
+)
