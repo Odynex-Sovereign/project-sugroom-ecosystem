@@ -18,5 +18,9 @@ git push origin main
 add_executable(project_myotonia_engine src/project_myotonia_engine.cpp)
 
 # Align GPU compiler profiles with optimized Jetson Orin streaming capabilities
-target_compile_options(project_myotonia_engine PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -arch=sm_87>
-)
+target_compile_options(project_myotonia_engine PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -arch=sm_87>)
+# Add compilation targets for Project Hypermetria's trajectory compensation engine
+add_executable(project_hypermetria_engine src/project_hypermetria_engine.cpp)
+
+# Optimize targets specifically for NVIDIA Jetson hardware module streaming
+target_compile_options(project_hypermetria_engine PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -arch=sm_87>)
