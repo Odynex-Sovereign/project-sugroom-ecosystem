@@ -1,84 +1,65 @@
-cmake_minimum_required(VERSION 3.18)
-project(OdynexPathologicalBiomimicryEcosystem LANGUAGES CXX CUDA)
+cmake_minimum_required(VERSION 3.14)
+project(OdynexPathologicalBiomimicryEcosystem LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CUDA_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(CUDA REQUIRED)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GSTREAMER REQUIRED gstreamer-1.0)
+# Host-side portable build (no CUDA / GStreamer / DeepStream required).
+# Optional CUDA acceleration can be re-enabled later with -DENABLE_CUDA=ON.
+option(ENABLE_CUDA "Build CUDA-accelerated kernels (requires NVIDIA toolchain)" OFF)
 
-include_directories(
-    ${GSTREAMER_INCLUDE_DIRS}
-    /opt/nvidia/deepstream/deepstream/sources/includes
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+set(ENGINE_SOURCES
+    src/sugroom_core_engine.cpp
+    src/project_nystagmus_engine.cpp
+    src/project_myotonia_engine.cpp
+    src/project_hypermetria_engine.cpp
+    src/project_synesthesia_engine.cpp
+    src/project_parkinson_engine.cpp
+    src/project_hemophilia_engine.cpp
+    src/project_tetanus_engine.cpp
+    src/project_phantom_limb_engine.cpp
+    src/project_laminitis_engine.cpp
+    src/project_ecdysis_engine.cpp
+    src/project_scab_engine.cpp
+    src/project_melanogenesis_engine.cpp
+    src/project_malunion_engine.cpp
+    src/project_homeostasis_engine.cpp
+    src/compliance_sentinel.cpp
 )
 
-# Hardware compute microcode targeted to unlock NVIDIA Orin Tensor Cores
-set(JETSON_COMPUTE_ARCH -arch=sm_87)
+foreach(src ${ENGINE_SOURCES})
+    get_filename_component(target_name ${src} NAME_WE)
+    add_executable(${target_name} ${src})
+    target_include_directories(${target_name} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+endforeach()
 
-# =========================================================================
-# UNIFIED ECOSYSTEM EXECUTABLE TARGETS (16 CORE PRODUCTION MODULES)
-# =========================================================================
+# Convenience meta-target: build everything
+add_custom_target(all_engines DEPENDS
+    sugroom_core_engine
+    project_nystagmus_engine
+    project_myotonia_engine
+    project_hypermetria_engine
+    project_synesthesia_engine
+    project_parkinson_engine
+    project_hemophilia_engine
+    project_tetanus_engine
+    project_phantom_limb_engine
+    project_laminitis_engine
+    project_ecdysis_engine
+    project_scab_engine
+    project_melanogenesis_engine
+    project_malunion_engine
+    project_homeostasis_engine
+    compliance_sentinel
+)
 
-# 1. Core SuGROOM Inverse-Tremor Engine (Feline CH Compensation)
-add_executable(sugroom_core_engine src/sugroom_core_engine.cpp)
-target_compile_options(sugroom_core_engine PRIVATE ${JETSON_COMPUTE_ARCH})
+enable_testing()
+foreach(src ${ENGINE_SOURCES})
+    get_filename_component(target_name ${src} NAME_WE)
+    add_test(NAME run_${target_name} COMMAND ${target_name})
+endforeach()
 
-# 2. Project Nystagmus Engine (Visual Jitter DeepStream Stabilization)
-add_executable(project_nystagmus_engine src/project_nystagmus_engine.cpp)
-target_link_libraries(project_nystagmus_engine PRIVATE ${GSTREAMER_LIBRARIES} cuda)
-
-# 3. Project Myotonia Engine (Adaptive Rigidity Lockdown)
-add_executable(project_myotonia_engine src/project_myotonia_engine.cpp)
-target_compile_options(project_myotonia_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 4. Project Hypermetria Engine (Predictive Target Over-Shoot Damping)
-add_executable(project_hypermetria_engine src/project_hypermetria_engine.cpp)
-target_compile_options(project_hypermetria_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 5. Project Synesthesia Engine (Cross-Modal Fallback Navigation)
-add_executable(project_synesthesia_engine src/project_synesthesia_engine.cpp)
-target_compile_options(project_synesthesia_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 6. Project Parkinson Engine (Signal Dropout Resilience Layer)
-add_executable(project_parkinson_engine src/project_parkinson_engine.cpp)
-target_compile_options(project_parkinson_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 7. Project Hemophilia Engine (Vascular Coagulation Leak Isolation)
-add_executable(project_hemophilia_engine src/project_hemophilia_engine.cpp)
-target_compile_options(project_hemophilia_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 8. Project Tetanus Engine (Inhibitory Motor Current Dampening)
-add_executable(project_tetanus_engine src/project_tetanus_engine.cpp)
-target_compile_options(project_tetanus_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 9. Project Phantom-Limb Engine (Kinematic Loss Trajectory Rebalancer)
-add_executable(project_phantom_limb_engine src/project_phantom_limb_engine.cpp)
-target_compile_options(project_phantom_limb_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 10. Project Equine-Laminitis Engine (Quadruped Weight Redistribution)
-add_executable(project_laminitis_engine src/project_laminitis_engine.cpp)
-target_compile_options(project_laminitis_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 11. Project Gecko-Ecdysis Engine (Dynamic Clamping Friction Control)
-add_executable(project_ecdysis_engine src/project_ecdysis_engine.cpp)
-target_compile_options(project_ecdysis_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 12. Project Coagulation-Scab Engine (Self-Healing Resin Boundaries)
-add_executable(project_scab_engine src/project_scab_engine.cpp)
-target_compile_options(project_scab_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 13. Project Melanogenesis Engine (Active Radiation Shielding Loop)
-add_executable(project_melanogenesis_engine src/project_melanogenesis_engine.cpp)
-target_compile_options(project_melanogenesis_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 14. Project Callous-Malunion Engine (Warped Geometry Angular Calibration)
-add_executable(project_malunion_engine src/project_malunion_engine.cpp)
-target_compile_options(project_malunion_engine PRIVATE ${JETSON_COMPUTE_ARCH})
-
-# 15. Embedded Export Control Compliance Sentinel Module
-add_executable(compliance_sentinel src/compliance_sentinel.cpp)
-
-# 16. Project Homeostasis Engine (Decentralized Traffic Self-Regulation)
-add_executable(project_homeostasis_engine src/project_homeostasis_engine.cpp)
-target_compile_options(project_homeostasis_engine PRIVATE ${JETSON_COMPUTE_ARCH})
+message(STATUS "Odynex SuGROOM ecosystem configured (host/CPU mode). Targets: ${ENGINE_SOURCES}")
