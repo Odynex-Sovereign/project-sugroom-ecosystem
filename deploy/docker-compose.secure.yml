@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  sugroom-secure-runtime:
+    image: nvcr.io/nvidia/cuda:12.2.0-runtime-ubuntu22.04
+    container_name: odynex_secure_edge_node
+    restart: always
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      # TUTSA Decryption parameters passed directly to local secure enclave partitions
+      - ODYNEX_ENCLAVE_KEY_ID=${ODYNEX_HARDWARE_KEY_ID}
+      - GEOGRAPHIC_COMPLIANCE_ZONE=US_DOMESTIC_SOWEGA
+    volumes:
+      # Mount the physical hardware secure enclave node into the container filesystem boundary
+      - /dev/tegra_secure_enclave:/dev/tegra_secure_enclave:ro
+      - /opt/odynex/encrypted_matrices:/opt/odynex/secure_assets:ro
+    tmpfs:
+      # Force temporary unencrypted runtimes to live strictly inside volatile RAM pools to stop flash logging leaks
+      - /run/odynex_volatile_heap:size=64M,mode=700
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SYS_RAWIO # Allows secure interaction with cryptographic hardware modules
+    command: ["/opt/odynex/secure_assets/sugroom_core_engine"]
+
+networks:
+  default:
+    internal: true # Cut off external outbound connections to isolate runtime arrays from network exploitation sweeps
