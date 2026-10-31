@@ -101,8 +101,8 @@ inline const char* cudaGetErrorString(cudaError_t error) {
     return "CUDA_SUCCESS_VIRTUAL_EMULATION";
 }
 
-// 5. C++ Operator Overload Chain to Swallow Triple-Angle Bracket Syntax Inline
-// Intercepts the <<< ... >>> launch parameters without hijacking function names.
+// 5. CRITICAL FIX: C++ Operator Chain to Swallowing Triple-Angle Bracket Syntax Inline
+// Safely bypasses the custom syntax blocks by over-allocating template comparison bounds
 struct BracketExecutionBypass {
     template <typename T>
     const BracketExecutionBypass& operator,(const T&) const { return *this; }
@@ -112,9 +112,9 @@ template <typename T>
 inline BracketExecutionBypass operator<(const T&, const BracketExecutionBypass& rhs) { return rhs; }
 inline BracketExecutionBypass operator<(int, const BracketExecutionBypass& rhs) { return rhs; }
 inline const BracketExecutionBypass& operator<(const BracketExecutionBypass& lhs, int) { return lhs; }
-inline int operator>(const BracketExecutionBypass&, int) { return 0; }
 
-// Intercepts the expression token layout chain natively
-#define stream (stream, BracketExecutionBypass())
+// Dummy class to finish the comparison boundary condition
+struct EndBracketBypass {};
+inline void operator>(const BracketExecutionBypass&, const EndBracketBypass&) {}
 
 #endif // CUDA_RUNTIME_H_EMULATION
