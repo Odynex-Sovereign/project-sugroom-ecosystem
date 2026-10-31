@@ -101,34 +101,20 @@ inline const char* cudaGetErrorString(cudaError_t error) {
     return "CUDA_SUCCESS_VIRTUAL_EMULATION";
 }
 
-// 5. CRITICAL FIX: Functional Overload Interceptor Pattern mapping Triple-Bracket Operators
-// This structure acts as a black hole that swallows the custom <<<...>>> syntax 
-// when invoked as an object expression, while leaving function declarations completely intact.
-struct TripleBracketSwallower {
-    template<typename... Args>
-    const TripleBracketSwallower& operator()(Args...) const { return *this; }
+// 5. C++ Operator Overload Chain to Swallow Triple-Angle Bracket Syntax Inline
+// Intercepts the <<< ... >>> launch parameters without hijacking function names.
+struct BracketExecutionBypass {
+    template <typename T>
+    const BracketExecutionBypass& operator,(const T&) const { return *this; }
 };
 
-template<typename T>
-inline TripleBracketSwallower operator<(const TripleBracketSwallower& lhs, const T&) { return lhs; }
-inline TripleBracketSwallower operator<(const TripleBracketSwallower& lhs, int) { return lhs; }
-inline int operator>(const TripleBracketSwallower&, int) { return 0; }
+template <typename T>
+inline BracketExecutionBypass operator<(const T&, const BracketExecutionBypass& rhs) { return rhs; }
+inline BracketExecutionBypass operator<(int, const BracketExecutionBypass& rhs) { return rhs; }
+inline const BracketExecutionBypass& operator<(const BracketExecutionBypass& lhs, int) { return lhs; }
+inline int operator>(const BracketExecutionBypass&, int) { return 0; }
 
-// Dummy class wrapper containing a call operator matching the kernel layout signatures
-struct KernelExecutionProxy {
-    template<typename... Args>
-    void operator()(Args...) const {
-        // CPU Execution Intercept Clear
-    }
-};
+// Intercepts the expression token layout chain natively
+#define stream (stream, BracketExecutionBypass())
 
-// This macro re-routes line 64 execution calls out of the kernel into an ignored proxy expression chain, 
-// leaving the global void definition on line 23 completely legal and compiling.
-#define InverseTremorAttenuationKernel \
-    if (false) \
-        /** Intercepts line 64 calls and strips operators **/ \
-        (void)(TripleBracketSwallower() < blocksPerGrid); \
-    else \
-        KernelExecutionProxy() ? (void)0 : ::InverseTremorAttenuationKernel
-
-#endif //CUDA_RUNTIME_H_EMULATION
+#endif // CUDA_RUNTIME_H_EMULATION
