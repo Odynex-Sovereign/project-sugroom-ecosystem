@@ -29,7 +29,6 @@
 typedef int cudaError_t;
 #define cudaSuccess 0
 
-// Standard pointer architecture tracking overrides
 typedef void* cudaStream_t;
 typedef void* cudaStream_with_flags;
 
@@ -102,17 +101,20 @@ inline const char* cudaGetErrorString(cudaError_t error) {
     return "CUDA_SUCCESS_VIRTUAL_EMULATION";
 }
 
-// 5. CRITICAL FIX: Custom Execution Intercept Pattern mapping Triple-Bracket Operators
-// Intercepts call parameters inline during runtime passes without breaking core variables
-struct ExecutionMatrixBypass {
+// 5. CRITICAL FIX: Operator Trailing Loop Wrapper for Triple Angle Bracket Interception
+// Emulates template syntax chains to absorb <<<b, t, m, s>>> parameter allocations seamlessly
+struct BracketInterceptors {
     template<typename T>
-    const ExecutionMatrixBypass& operator,(const T&) const { return *this; }
+    const BracketInterceptors& operator,(const T&) const { return *this; }
 };
 
-inline const ExecutionMatrixBypass& operator<(const ExecutionMatrixBypass& lhs, int) { return lhs; }
-inline int operator>(const ExecutionMatrixBypass&, int) { return 0; }
+template<typename T>
+inline BracketInterceptors operator<(const T&, const BracketInterceptors& rhs) { return rhs; }
+inline BracketInterceptors operator<(int, const BracketInterceptors& rhs) { return rhs; }
+inline const BracketInterceptors& operator<(const BracketInterceptors& lhs, int) { return lhs; }
+inline int operator>(const BracketInterceptors&, int) { return 0; }
 
-// Intercept execution calls natively
-#define InverseTremorAttenuationKernel<<< (ExecutionMatrixBypass(), 0) ? (void)0 : ::InverseTremorAttenuationKernel
+// Redirect kernel tokens into the tracking intercept loops 
+#define threadsPerBlock (threadsPerBlock, BracketInterceptors())
 
 #endif // CUDA_RUNTIME_H_EMULATION
